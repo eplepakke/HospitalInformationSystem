@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using HospitalInformationSystem.Models;
+using HospitalInformationSystem.Processing;
 
 namespace HospitalInformationSystem.Structures
 {
@@ -244,8 +245,10 @@ namespace HospitalInformationSystem.Structures
             while(queue.Count > 0)
             {
                 Doctor doctor = queue.Dequeue();
-                // Поиск по части должности прямым поиском в тексте
-                doctors.Add(doctor);
+                if (DataSearch.ContainsIgnoreCase(doctor.Position, position))
+                {
+                    doctors.Add(doctor);
+                }
             }
             return doctors;
         }
