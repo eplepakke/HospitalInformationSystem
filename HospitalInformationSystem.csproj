@@ -77,6 +77,7 @@
     <Compile Include="Models\Doctor.cs" />
     <Compile Include="Models\Patient.cs" />
     <Compile Include="Models\Referral.cs" />
+    <Compile Include="Processing\DataParser.cs" />
     <Compile Include="Processing\DataSearch.cs" />
     <Compile Include="Processing\DataValidator.cs" />
     <Compile Include="Program.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="Structures\AVLTree.cs" />
     <Compile Include="Structures\HashTable.cs" />
     <Compile Include="Structures\LayeredList.cs" />
+    <Compile Include="Tests\DataParserTests.cs" />
     <Compile Include="Tests\DataValidatorTests.cs" />
   </ItemGroup>
   <ItemGroup>

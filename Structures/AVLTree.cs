@@ -215,6 +215,20 @@ namespace HospitalInformationSystem.Structures
             }
         }
 
+        private Node Clear(Node node)
+        {
+            if (node == null)
+                return null;
+
+            // Рекурсивно очищаем поддеревья
+            node.left = Clear(node.left);
+            node.right = Clear(node.right);
+
+            // Освобождаем память, занимаемую узлом
+            node = null;
+            return node;
+        }
+
         public void Add(Doctor data)
         {
             root = Insert(root, data);
@@ -257,6 +271,11 @@ namespace HospitalInformationSystem.Structures
         {
             Console.WriteLine("Дерево:");
             PrintTree(root, "", false);
+        }
+
+        public void Clear()
+        {
+            root = Clear(root);
         }
     }
 }
