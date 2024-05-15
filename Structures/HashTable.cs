@@ -1,4 +1,7 @@
 ﻿using HospitalInformationSystem.Models;
+using HospitalInformationSystem.Processing;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace HospitalInformationSystem.Structures
@@ -163,6 +166,19 @@ namespace HospitalInformationSystem.Structures
                 }
                 i++;
             }
+        }
+        public List<Patient> SearchByPartiallyFullName(string partiallyFullName)
+        {
+            List<Patient> patients = new List<Patient>();
+            ObservableCollection<Patient> collection = GetAllPatients();
+            foreach (var patient in collection)
+            {
+                if (DataSearch.ContainsIgnoreCase(patient.FullName, partiallyFullName))
+                {
+                    patients.Add(patient);
+                }
+            }
+            return patients;
         }
         public Patient RemovePatientByNumber(string key)
         {

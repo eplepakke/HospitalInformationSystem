@@ -7,5 +7,9 @@
         public string Position { get; set; } = string.Empty;
         public int OfficeNumber { get; set; }
         public string Schedule { get; set; } = string.Empty;
+        public override string ToString()
+        {
+            return Id.ToString() + " - " + SurnameInitials + " - " + Position + " - " + OfficeNumber.ToString() + " - " + Schedule;
+        }
     }
 }

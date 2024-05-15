@@ -9,21 +9,13 @@ namespace HospitalInformationSystem.Tests
     [TestFixture]
     public class DataParserTests
     {
-        private DataParser _dataParser;
-
-        [SetUp]
-        public void Setup()
-        {
-            _dataParser = new DataParser();
-        }
-
         [TestCase("1990", 1990)]
         [TestCase("2000", 2000)]
         [TestCase("invalid", -1)]
         [TestCase("", -1)]
         public void ParseYearOfBirth_ValidAndInvalidInputs_ReturnsExpectedResult(string input, int expectedResult)
         {
-            int year = _dataParser.ParseYearOfBirth(input);
+            int year = DataParser.ParseYearOfBirth(input);
 
             ClassicAssert.AreEqual(expectedResult, year);
         }
@@ -35,7 +27,7 @@ namespace HospitalInformationSystem.Tests
         [TestCase("", -1)]
         public void ParseOfficeNumber_ValidAndInvalidInputs_ReturnsExpectedResult(string input, int expectedResult)
         {
-            int number = _dataParser.ParseOfficeNumber(input);
+            int number = DataParser.ParseOfficeNumber(input);
 
             ClassicAssert.AreEqual(expectedResult, number);
         }
@@ -47,7 +39,7 @@ namespace HospitalInformationSystem.Tests
         [TestCase("20.04.2024", "invalid", 1, 1, 1, 0, 0)]
         public void ParseDateAndTime_ValidAndInvalidInputs_ReturnsExpectedDateTime(string inputDate, string inputTime, int year, int month, int day, int hour, int minute)
         {
-            DateTime dateTime = _dataParser.ParseDateAndTime(inputDate, inputTime);
+            DateTime dateTime = DataParser.ParseDateAndTime(inputDate, inputTime);
 
             ClassicAssert.AreEqual(new DateTime(year, month, day, hour, minute, 0), dateTime);
         }
@@ -64,7 +56,7 @@ namespace HospitalInformationSystem.Tests
             TimeSpan startExpected = new TimeSpan(startHours, startMinutes, 0);
             TimeSpan endExpected = new TimeSpan(endHours, endMinutes, 0);
 
-            bool result = _dataParser.TryParseTimeRange(timeRangeStr, out startTime, out endTime);
+            bool result = DataParser.TryParseTimeRange(timeRangeStr, out startTime, out endTime);
 
             ClassicAssert.AreEqual(expectedResult, result);
             ClassicAssert.AreEqual(startExpected, startTime);
@@ -81,7 +73,7 @@ namespace HospitalInformationSystem.Tests
         {
             DayOfWeek dayOfWeek;
 
-            bool result = _dataParser.TryParseDayOfWeek(dayOfWeekStr, out dayOfWeek);
+            bool result = DataParser.TryParseDayOfWeek(dayOfWeekStr, out dayOfWeek);
 
             ClassicAssert.AreEqual(expectedResult, result);
             ClassicAssert.AreEqual(dayOfWeekExpected, dayOfWeek);
@@ -94,7 +86,7 @@ namespace HospitalInformationSystem.Tests
         {
             DateTime dateTimeToCheck = DateTime.Parse(dateTimeStr);
 
-            bool result = _dataParser.TryParseDateTimeWithSchedule(dateTimeToCheck, schedule);
+            bool result = DataParser.TryParseDateTimeWithSchedule(dateTimeToCheck, schedule);
 
             return result;
         }

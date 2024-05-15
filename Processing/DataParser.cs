@@ -3,9 +3,9 @@ using System.Globalization;
 
 namespace HospitalInformationSystem.Processing
 {
-    public class DataParser
+    public static class DataParser
     {
-        public int ParseYearOfBirth(string input)
+        public static int ParseYearOfBirth(string input)
         {
             int year = -1;
             if (DataValidator.ValidateYearOfBirth(input))
@@ -14,7 +14,7 @@ namespace HospitalInformationSystem.Processing
             }
             return year;
         }
-        public int ParseOfficeNumber(string input)
+        public static int ParseOfficeNumber(string input)
         {
             int number = -1;
             if (DataValidator.ValidateOfficeNumber(input)) 
@@ -23,7 +23,7 @@ namespace HospitalInformationSystem.Processing
             }
             return number;
         }
-        public DateTime ParseDateAndTime(string inputDate, string inputTime)
+        public static DateTime ParseDateAndTime(string inputDate, string inputTime)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture("ru-RU");
 
@@ -36,7 +36,7 @@ namespace HospitalInformationSystem.Processing
             }
             return dateTime;
         }
-        public bool TryParseTimeRange(string timeRangeStr, out TimeSpan startTime, out TimeSpan endTime)
+        public static bool TryParseTimeRange(string timeRangeStr, out TimeSpan startTime, out TimeSpan endTime)
         {
             startTime = TimeSpan.Zero;
             endTime = TimeSpan.Zero;
@@ -53,7 +53,7 @@ namespace HospitalInformationSystem.Processing
 
             return true;
         }
-        public bool TryParseDayOfWeek(string dayOfWeekStr, out DayOfWeek dayOfWeek)
+        public static bool TryParseDayOfWeek(string dayOfWeekStr, out DayOfWeek dayOfWeek)
         {
             switch(dayOfWeekStr) 
             {
@@ -83,7 +83,7 @@ namespace HospitalInformationSystem.Processing
                     return false;
             }
         }
-        public bool TryParseDateTimeWithSchedule(DateTime dateTime, string schedule)
+        public static bool TryParseDateTimeWithSchedule(DateTime dateTime, string schedule)
         {
             // Разбиваем строку расписания на составляющие
             var daySchedules = schedule.Split(' ', (char)StringSplitOptions.RemoveEmptyEntries);

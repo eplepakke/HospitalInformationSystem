@@ -8,5 +8,9 @@ namespace HospitalInformationSystem.Models
         public string PatientRegistrationNumber { get; set; } = string.Empty;
         public string DoctorSurnameInitials { get; set; } = string.Empty;
         public DateTime Datetime { get; set; }
+        public override string ToString()
+        {
+            return Id.ToString() + " - " + PatientRegistrationNumber + " - " + DoctorSurnameInitials + " - " + Datetime.ToString();
+        }
     }
 }

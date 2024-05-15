@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using HospitalInformationSystem.Models;
 using HospitalInformationSystem.Processing;
 
@@ -26,12 +27,10 @@ namespace HospitalInformationSystem.Structures
         {
             return N == null ? -1 : N.height;
         }
-
         int Max(int a, int b)
         {
             return (a > b) ? a : b;
         }
-
         Node RightRotate(Node y)
         {
             Node x = y.left;
@@ -45,7 +44,6 @@ namespace HospitalInformationSystem.Structures
 
             return x;
         }
-
         Node LeftRotate(Node x)
         {
             Node y = x.right;
@@ -59,12 +57,10 @@ namespace HospitalInformationSystem.Structures
 
             return y;
         }
-
         int GetBalance(Node N)
         {
             return N == null ? 0 : Height(N.left) - Height(N.right);
         }
-
         Node Insert(Node node, Doctor data)
         {
             if (node == null)
@@ -100,7 +96,6 @@ namespace HospitalInformationSystem.Structures
 
             return node;
         }
-
         Node MinValueNode(Node node)
         {
             Node current = node;
@@ -110,7 +105,6 @@ namespace HospitalInformationSystem.Structures
 
             return current;
         }
-
         Node Delete(Node root, Doctor data)
         {
             if (root == null)
@@ -173,7 +167,6 @@ namespace HospitalInformationSystem.Structures
 
             return root;
         }
-
         Node Search(Node root, Doctor data)
         {
             if (root == null || String.Compare(data.SurnameInitials, root.data.SurnameInitials) == 0)
@@ -184,7 +177,6 @@ namespace HospitalInformationSystem.Structures
 
             return Search(root.right, data);
         }
-
         void InOrder(Node root, Queue<Doctor> resultList)
         {
             if (root != null)
@@ -194,14 +186,12 @@ namespace HospitalInformationSystem.Structures
                 InOrder(root.right, resultList);
             }
         }
-
         Queue<Doctor> InOrderTraversal()
         {
             Queue<Doctor> result = new Queue<Doctor>();
             InOrder(root, result);
             return result;
         }
-
         void PrintTree(Node root, string prefix, bool isLeft)
         {
             if (root != null)
@@ -214,7 +204,6 @@ namespace HospitalInformationSystem.Structures
                 PrintTree(root.right, prefix + (isLeft ? "│   " : "    "), false);
             }
         }
-
         private Node Clear(Node node)
         {
             if (node == null)
@@ -228,17 +217,14 @@ namespace HospitalInformationSystem.Structures
             node = null;
             return node;
         }
-
         public void Add(Doctor data)
         {
             root = Insert(root, data);
         }
-
         public void Remove(Doctor data)
         {
             root = Delete(root, data);
         }
-
         public Doctor SearchBySurnameInitials(string surnameInitials)
         {
             if (root == null)
@@ -251,7 +237,6 @@ namespace HospitalInformationSystem.Structures
 
             return Search(root, searchDoctor).data;
         }
-
         public List<Doctor> SearchByPartiallyPosition(string position)
         {
             List<Doctor> doctors = new List<Doctor>();
@@ -266,13 +251,18 @@ namespace HospitalInformationSystem.Structures
             }
             return doctors;
         }
-
-        public void PrintTree()
+        public ObservableCollection<Doctor> GetAllDoctors()
         {
-            Console.WriteLine("Дерево:");
-            PrintTree(root, "", false);
-        }
+            ObservableCollection<Doctor> doctors = new ObservableCollection<Doctor>();
+            Queue<Doctor> queue = InOrderTraversal();
 
+            while (queue.Count > 0)
+            {
+                doctors.Add(queue.Dequeue());
+            }
+
+            return doctors;
+        }
         public void Clear()
         {
             root = Clear(root);

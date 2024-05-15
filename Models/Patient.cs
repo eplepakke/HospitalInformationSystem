@@ -8,5 +8,9 @@
         public int YearOfBirth { get; set; }
         public string Address { get; set; } = string.Empty;
         public string Workplace { get; set; } = string.Empty;
+        public override string ToString() 
+        {
+            return Id.ToString() + " - " + RegistrationNumber + " - " + FullName + " - " + YearOfBirth.ToString() + " - " + Address + " - " + Workplace;
+        }
     }
 }

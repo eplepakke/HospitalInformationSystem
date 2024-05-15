@@ -1,5 +1,6 @@
 ﻿using HospitalInformationSystem.Models;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace HospitalInformationSystem.Structures
@@ -114,6 +115,7 @@ namespace HospitalInformationSystem.Structures
         }
         public ObservableCollection<Referral> GetAllReferrals()
         {
+            Sort();
             ObservableCollection<Referral> referrals = new ObservableCollection<Referral>();
 
             ListNode curr = Head;
@@ -130,7 +132,6 @@ namespace HospitalInformationSystem.Structures
         {
             Head = QuickSort(Head);
         }
-
         // Вспомогательный метод для сортировки QuickSort
         private ListNode QuickSort(ListNode head)
         {
@@ -160,7 +161,6 @@ namespace HospitalInformationSystem.Structures
 
             return sortedList;
         }
-
         // Вспомогательный метод для разделения списка на две части
         private ListNode[] Partition(ListNode head)
         {
@@ -251,9 +251,9 @@ namespace HospitalInformationSystem.Structures
             return partitions;
         }
         // Метод для поиска Referral по фамилии врача
-        public ObservableCollection<Referral> FindByDoctorName(string doctorSurname)
+        public List<Referral> FindByDoctorName(string doctorSurname)
         {
-            ObservableCollection<Referral> foundReferrals = new ObservableCollection<Referral>();
+            List<Referral> foundReferrals = new List<Referral>();
 
             ListNode currentGroup = Head;
 
@@ -277,10 +277,11 @@ namespace HospitalInformationSystem.Structures
 
             return foundReferrals;
         }
-
         // Метод для поиска Referral по регистрационному номеру пациента
-        public Referral FindByPatientRegistrationNumber(string registrationNumber)
+        public List<Referral> FindByPatientRegistrationNumber(string registrationNumber)
         {
+            List<Referral> foundReferrals = new List<Referral>();
+
             ListNode currentGroup = Head;
 
             while (currentGroup != null)
@@ -291,8 +292,8 @@ namespace HospitalInformationSystem.Structures
                 {
                     if (currentNode.Referral.PatientRegistrationNumber.Equals(registrationNumber, StringComparison.OrdinalIgnoreCase))
                     {
-                        // Возвращаем найденный Referral
-                        return currentNode.Referral;
+                        // Добавляем найденный Referral в коллекцию
+                        foundReferrals.Add(currentNode.Referral);
                     }
 
                     currentNode = currentNode.Next;
@@ -301,7 +302,26 @@ namespace HospitalInformationSystem.Structures
                 currentGroup = currentGroup.NextGroup; // Переходим к следующей группе
             }
 
-            return null; // Если не найден Referral с указанным регистрационным номером
+            return foundReferrals;
+        }
+        public void Clear()
+        {
+            Head = null; // Обнуляем головной узел, чтобы список стал пустым
+
+            // Очищаем память, проходя по всем узлам и удаляя их
+            ListNode currentGroup = Head;
+            while (currentGroup != null)
+            {
+                ListNode currentNode = currentGroup;
+                while (currentNode != null)
+                {
+                    ListNode nextNode = currentNode.Next; // Сохраняем ссылку на следующий узел
+                    currentNode.Next = null; // Отсоединяем текущий узел от списка
+                    currentNode.NextGroup = null; // Отсоединяем текущий узел от группы
+                    currentNode = nextNode; // Переходим к следующему узлу
+                }
+                currentGroup = currentGroup.NextGroup; // Переходим к следующей группе
+            }
         }
     }
 }
