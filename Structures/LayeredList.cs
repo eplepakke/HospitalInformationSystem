@@ -98,7 +98,7 @@ namespace HospitalInformationSystem.Structures
                 currNode = currNode.Next;
             }
 
-            // если узел с данными проката найден, удалить его из списка
+            // если узел с данными найден, удалить его из списка
             if (currNode != null)
             {
                 // если узел является началом группы
@@ -132,147 +132,95 @@ namespace HospitalInformationSystem.Structures
         {
             Head = QuickSort(Head);
         }
-        // Вспомогательный метод для сортировки QuickSort
         private ListNode QuickSort(ListNode head)
         {
             if (head == null || head.Next == null)
                 return head;
 
-            // Разделение списка на две части по pivot
-            ListNode[] partitions = Partition(head);
-
-            // Рекурсивная сортировка двух частей
-            partitions[0] = QuickSort(partitions[0]); // Левая часть
-            partitions[1] = QuickSort(partitions[1]); // Правая часть
-
-            // Объединение отсортированных частей
-            ListNode sortedList = partitions[0];
-
-            ListNode tail = sortedList;
-            while (tail != null && tail.Next != null)
-            {
-                tail = tail.Next;
-            }
-
-            if (tail != null)
-            {
-                tail.NextGroup = partitions[1];
-            }
-
-            return sortedList;
-        }
-        // Вспомогательный метод для разделения списка на две части
-        private ListNode[] Partition(ListNode head)
-        {
-            if (head == null || head.Next == null)
-                return new ListNode[] { head, null };
-
             ListNode pivot = head;
-            ListNode smallerHead = null;
-            ListNode smallerTail = null;
-            ListNode equalHead = null;
-            ListNode equalTail = null;
-            ListNode largerHead = null;
-            ListNode largerTail = null;
+            ListNode lessHead = null, lessTail = null;
+            ListNode greaterHead = null, greaterTail = null;
+            ListNode curr = head.Next;
 
-            ListNode current = head;
-            while (current != null)
+            while (curr != null)
             {
-                if (string.Compare(current.Referral.DoctorSurnameInitials, pivot.Referral.DoctorSurnameInitials) < 0)
+                if (string.Compare(curr.Referral.DoctorSurnameInitials, pivot.Referral.DoctorSurnameInitials, StringComparison.OrdinalIgnoreCase) <= 0)
                 {
-                    if (smallerHead == null)
+                    if (lessHead == null)
                     {
-                        smallerHead = current;
-                        smallerTail = current;
+                        lessHead = curr;
+                        lessTail = curr;
                     }
                     else
                     {
-                        smallerTail.Next = current;
-                        smallerTail = smallerTail.Next;
-                    }
-                }
-                else if (string.Compare(current.Referral.DoctorSurnameInitials, pivot.Referral.DoctorSurnameInitials) == 0)
-                {
-                    if (equalHead == null)
-                    {
-                        equalHead = current;
-                        equalTail = current;
-                    }
-                    else
-                    {
-                        equalTail.Next = current;
-                        equalTail = equalTail.Next;
+                        lessTail.Next = curr;
+                        lessTail = curr;
                     }
                 }
                 else
                 {
-                    if (largerHead == null)
+                    if (greaterHead == null)
                     {
-                        largerHead = current;
-                        largerTail = current;
+                        greaterHead = curr;
+                        greaterTail = curr;
                     }
                     else
                     {
-                        largerTail.Next = current;
-                        largerTail = largerTail.Next;
+                        greaterTail.Next = curr;
+                        greaterTail = curr;
                     }
                 }
-
-                current = current.Next;
+                curr = curr.Next;
             }
 
-            // Сборка разделенных частей
-            ListNode[] partitions = new ListNode[2];
-            if (smallerHead != null)
+            if (lessTail != null)
+                lessTail.Next = null;
+            if (greaterTail != null)
+                greaterTail.Next = null;
+
+            ListNode sortedLess = QuickSort(lessHead);
+            ListNode sortedGreater = QuickSort(greaterHead);
+
+            return Concatenate(sortedLess, pivot, sortedGreater);
+        }
+        private ListNode Concatenate(ListNode less, ListNode pivot, ListNode greater)
+        {
+            ListNode head = less;
+
+            if (less == null)
             {
-                partitions[0] = smallerHead;
-                smallerTail.Next = null;
+                head = pivot;
             }
             else
             {
-                partitions[0] = null;
+                ListNode temp = less;
+                while (temp.Next != null)
+                {
+                    temp = temp.Next;
+                }
+                temp.Next = pivot;
             }
 
-            if (equalHead != null)
-            {
-                partitions[1] = equalHead;
-                equalTail.Next = null;
-            }
-            else
-            {
-                partitions[1] = null;
-            }
+            pivot.Next = greater;
 
-            if (largerHead != null)
-            {
-                largerTail.Next = null;
-            }
-
-            return partitions;
+            return head;
         }
         // Метод для поиска Referral по фамилии врача
         public List<Referral> FindByDoctorName(string doctorSurname)
         {
             List<Referral> foundReferrals = new List<Referral>();
 
-            ListNode currentGroup = Head;
+            ListNode currentNode = Head;
 
-            while (currentGroup != null)
+            while (currentNode != null)
             {
-                ListNode currentNode = currentGroup;
-
-                while (currentNode != null)
+                if (currentNode.Referral.DoctorSurnameInitials.Equals(doctorSurname, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (currentNode.Referral.DoctorSurnameInitials.Equals(doctorSurname, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Добавляем найденный Referral в коллекцию
-                        foundReferrals.Add(currentNode.Referral);
-                    }
-
-                    currentNode = currentNode.Next;
+                    // Добавляем найденный Referral в коллекцию
+                    foundReferrals.Add(currentNode.Referral);
                 }
 
-                currentGroup = currentGroup.NextGroup; // Переходим к следующей группе
+                currentNode = currentNode.Next;
             }
 
             return foundReferrals;
@@ -282,24 +230,17 @@ namespace HospitalInformationSystem.Structures
         {
             List<Referral> foundReferrals = new List<Referral>();
 
-            ListNode currentGroup = Head;
+            ListNode currentNode = Head;
 
-            while (currentGroup != null)
+            while (currentNode != null)
             {
-                ListNode currentNode = currentGroup;
-
-                while (currentNode != null)
+                if (currentNode.Referral.PatientRegistrationNumber.Equals(registrationNumber, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (currentNode.Referral.PatientRegistrationNumber.Equals(registrationNumber, StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Добавляем найденный Referral в коллекцию
-                        foundReferrals.Add(currentNode.Referral);
-                    }
-
-                    currentNode = currentNode.Next;
+                    // Добавляем найденный Referral в коллекцию
+                    foundReferrals.Add(currentNode.Referral);
                 }
 
-                currentGroup = currentGroup.NextGroup; // Переходим к следующей группе
+                currentNode = currentNode.Next;
             }
 
             return foundReferrals;

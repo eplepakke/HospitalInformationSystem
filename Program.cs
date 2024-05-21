@@ -161,6 +161,7 @@ namespace HospitalInformationSystem
         }
         static void DeletePatientFromDB(Patient patient)
         {
+            if (patient == null) { return; }
             using (var context = new ApplicationDbContext())
             {
                 context.Patients.Remove(patient);
@@ -177,6 +178,7 @@ namespace HospitalInformationSystem
         }
         static void DeleteDoctorFromDB(Doctor doctor)
         {
+            if (doctor == null) { return; }
             using (var context = new ApplicationDbContext())
             {
                 context.Doctors.Remove(doctor);
@@ -193,6 +195,7 @@ namespace HospitalInformationSystem
         }
         static void DeleteReferralFromDB(Referral referral)
         {
+            if (referral == null) { return; }
             using (var context = new ApplicationDbContext())
             {
                 context.Referrals.Remove(referral);
@@ -458,10 +461,10 @@ namespace HospitalInformationSystem
             }
 
             Doctor deleted = avlTree.SearchBySurnameInitials(surnameInitials);
-            avlTree.Remove(deleted);
-            DeleteDoctorFromDB(deleted);
             if (deleted != null) 
             {
+                avlTree.Remove(deleted);
+                DeleteDoctorFromDB(deleted);
                 Console.WriteLine("Данные о враче удалены.");
                 Console.WriteLine(deleted.ToString());
                 List<Referral> founded = layeredList.FindByDoctorName(surnameInitials);
@@ -536,7 +539,7 @@ namespace HospitalInformationSystem
         {
             Console.Write("Введите регистрационный номер пациента: ");
             string registrationNumber = Console.ReadLine();
-            while (!DataValidator.ValidateRegistrationNumber(registrationNumber) && hashTable.GetPatientByNumber(registrationNumber) != null)
+            while (!DataValidator.ValidateRegistrationNumber(registrationNumber) || hashTable.GetPatientByNumber(registrationNumber) == null)
             {
                 if (!DataValidator.ValidateRegistrationNumber(registrationNumber))
                 {
@@ -552,7 +555,7 @@ namespace HospitalInformationSystem
 
             Console.Write("Введите фамилию инициалы врача, к которому направляется пациент: ");
             string surnameInitials = Console.ReadLine();
-            while (!DataValidator.ValidateSurnameInitials(surnameInitials) && avlTree.SearchBySurnameInitials(surnameInitials) != null)
+            while (!DataValidator.ValidateSurnameInitials(surnameInitials) || avlTree.SearchBySurnameInitials(surnameInitials) == null)
             {
                 if (!DataValidator.ValidateSurnameInitials(surnameInitials))
                 {
@@ -587,7 +590,7 @@ namespace HospitalInformationSystem
 
             DateTime dateTime = DataParser.ParseDateAndTime(dateStr, timeStr);
 
-            if (!DataParser.TryParseDateTimeWithSchedule(dateTime, doctor.Schedule))
+            if (DataParser.TryParseDateTimeWithSchedule(dateTime, doctor.Schedule))
             {
                 Console.WriteLine("Направление выдано пациенту.");
                 Referral referral = new Referral() 
@@ -608,7 +611,7 @@ namespace HospitalInformationSystem
         {
             Console.Write("Введите регистрационный номер пациента: ");
             string registrationNumber = Console.ReadLine();
-            while (!DataValidator.ValidateRegistrationNumber(registrationNumber) && hashTable.GetPatientByNumber(registrationNumber) != null)
+            while (!DataValidator.ValidateRegistrationNumber(registrationNumber) || hashTable.GetPatientByNumber(registrationNumber) == null)
             {
                 if (!DataValidator.ValidateRegistrationNumber(registrationNumber))
                 {
@@ -625,7 +628,7 @@ namespace HospitalInformationSystem
 
             Console.Write("Введите фамилию инициалы врача, к которому направляется пациент: ");
             string surnameInitials = Console.ReadLine();
-            while (!DataValidator.ValidateSurnameInitials(surnameInitials) && avlTree.SearchBySurnameInitials(surnameInitials) != null)
+            while (!DataValidator.ValidateSurnameInitials(surnameInitials) || avlTree.SearchBySurnameInitials(surnameInitials) == null)
             {
                 if (!DataValidator.ValidateSurnameInitials(surnameInitials))
                 {

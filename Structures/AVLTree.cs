@@ -235,7 +235,9 @@ namespace HospitalInformationSystem.Structures
                 SurnameInitials = surnameInitials
             };
 
-            return Search(root, searchDoctor).data;
+            Node founded = Search(root, searchDoctor);
+            if (founded == null) return null;
+            else return founded.data;
         }
         public List<Doctor> SearchByPartiallyPosition(string position)
         {
